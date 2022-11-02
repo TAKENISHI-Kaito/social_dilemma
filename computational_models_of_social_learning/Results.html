@@ -1,0 +1,24 @@
+{{ block title }}
+    Result
+{{ endblock }}
+
+{{ block content }}
+
+<p>
+    You started with an endowment of {{ C.ENDOWMENT }},
+    of which you contributed {{ player.contribution }}.<br>
+    Your group contributed {{ group.total_contribution }},
+    resulting in an individual share of {{ group.individual_share }}.<br>
+    Your profit is therefore {{ player.payoff }}.
+</p>
+
+{{ for i in contributions }}
+    <p>{{ i }}</p>
+{{ endfor }}
+
+{{ contributions}}
+
+    {{ next_button }}
+{{ endblock }}
+
+
