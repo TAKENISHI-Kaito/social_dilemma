@@ -6,12 +6,12 @@ Your app description
 """
 
 # "indID"：player.id_in_subsession
-# "round_num"：player.round_number
+# "round_number"
 # "groupID"：player.group_id
 # "action"：player.contribute
 # "othersCoop"：player.get_others_in_group()[n].action
 # "payoff"：player.payoff
-# "othersCoop.past"：
+# "othersCoop_past"：
 
 
 class C(BaseConstants):
@@ -28,16 +28,14 @@ class Subsession(BaseSubsession):
 class Group(BaseGroup):
     total_contribution = models.CurrencyField()
     individual_share = models.CurrencyField()
-    contributer = models.IntegerField(initial=0)
 
 
 class Player(BasePlayer):
     indID = models.IntegerField(label="ID番号入力欄")
-    round_num = models.IntegerField()
     groupID = models.IntegerField()
     action = models.IntegerField()
-    othersCoop = models.IntegerField()
-    othersCoop.past = models.IntegerField()
+    othersCoop = models.IntegerField(initial=0)
+    othersCoop_past = models.IntegerField()
     contribute = models.BooleanField(
         label="10ポイントを?",
         choices=[[True, "提供する"], [False, "提供しない"]]
@@ -52,59 +50,25 @@ def creating_session(subsession: Subsession):
 
 def set_info(player: Player):
     player.indID = player.id_in_subsession
-    player.round_num = player.round_number
     player.groupID = player.group_id
     player.payoff = C.ENDOWMENT
-    if player.contribute == True:
-        player.action = 1
+    player.action = int(player.contribute)
+    if player.round_number >= 2:
+        player.othersCoop_past = player.in_round(player.round_number - 1).othersCoop
     else:
-        player.action = 0
+        player.othersCoop_past = None
 
 
 def set_payoffs(group: Group):
     players = group.get_players()
     for player in players:
-        print("player is ", player)
-        print("player_action is ", player.action)
-        print("player_payoff_before is ", player.payoff)
-        group.contributer = 0
         if player.action == 1:
             player.payoff = C.ENDOWMENT - 10
-        print("player_payoff is ", player.payoff)
+        player.othersCoop = 0
         for i in range(3):
-            print("i", i)
-            print("player.get_others_in_group()[i]", player.get_others_in_group()[i])
-            print("player.get_others_in_group()[i].action", player.get_others_in_group()[i].action)
             if player.get_others_in_group()[i].action == 1:
-                group.contributer += 1
-        print("group_contributer is ", group.contributer)
-        print("***************************************")
-        player.payoff += group.contributer * 5
-
-
-
-# def set_payoffs(group: Group):
-#     players = group.get_players()
-#     # subsession = group.subsession
-#     contributions = []
-#     for p in players:
-#         print(p.contribute)
-#         print(p.id_in_subsession)
-#         print(p.in_round)
-#         print(p.in_rounds)
-#         print(p.get_others_in_group()[0].id_in_subsession)
-#         print(p.get_others_in_group()[1].id_in_subsession)
-#         print(p.get_others_in_group()[2].id_in_subsession)
-#         if p.contribute == True:
-#             contributions.append(10)
-#     # contributions = [p.contribution for p in players]
-#     print(contributions)
-#     group.total_contribution = sum(contributions)
-#     group.individual_share = group.total_contribution * 1.5
-#     for player in players:
-#         player.payoff = C.ENDOWMENT - player.contribute + group.individual_share
-#
-    # return contributions
+                player.othersCoop += 1
+        player.payoff += player.othersCoop * 5
 
 
 # PAGES
@@ -142,20 +106,20 @@ page_sequence = [Contribute, ResultsWaitPage, Results]
 def custom_export(players):
     yield[
         "indID",
-        "round_num",
+        "round",
         "groupID",
         "action",
         "othersCoop",
         "payoff",
-        # "othersCoop.past"
+        "othersCoop_past"
     ]
     for player in players:
         yield[
-            "player.indID",
-            "player.round_num",
-            "player.groupID",
-            "player.action",
-            "player.othersCoop",
-            "player.payoff",
-            # "player.othersCoop.past"
+            player.indID,
+            player.round_number,
+            player.groupID,
+            player.action,
+            player.othersCoop,
+            player.payoff,
+            player.othersCoop_past
         ]
