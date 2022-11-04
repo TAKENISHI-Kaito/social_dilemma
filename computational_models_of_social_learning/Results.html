@@ -4,19 +4,18 @@
 
 {{ block content }}
 
+<p>第{{ player.round_num }}ラウンド</p>
+
 <p>
-    You started with an endowment of {{ C.ENDOWMENT }},
-    of which you contributed {{ player.contribution }}.<br>
-    Your group contributed {{ group.total_contribution }},
-    resulting in an individual share of {{ group.individual_share }}.<br>
-    Your profit is therefore {{ player.payoff }}.
+    全員が行動を決定しました<br>
+    your group is {{ player.groupID }}<br>
+    your ID is {{ player.indID }}<br>
+    whether you contributed is {{ player.contribute }}<br>
+    thus your action is {{ player.action }}<br>
+    payoff is {{ player.payoff }}<br>
 </p>
 
-{{ for i in contributions }}
-    <p>{{ i }}</p>
-{{ endfor }}
-
-{{ contributions}}
+{{ contributions }}
 
     {{ next_button }}
 {{ endblock }}
