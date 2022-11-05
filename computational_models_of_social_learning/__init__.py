@@ -31,13 +31,13 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    indID = models.IntegerField(label="ID番号入力欄")
+    indID = models.IntegerField(label="以下にID番号を入力してください")
     groupID = models.IntegerField()
     action = models.IntegerField()
     othersCoop = models.IntegerField(initial=0)
     othersCoop_past = models.IntegerField()
     contribute = models.BooleanField(
-        label="10ポイントを?",
+        label="10ポイントを",
         choices=[[True, "提供する"], [False, "提供しない"]]
     )
 
@@ -54,7 +54,8 @@ def set_info(player: Player):
     player.payoff = C.ENDOWMENT
     player.action = int(player.contribute)
     if player.round_number >= 2:
-        player.othersCoop_past = player.in_round(player.round_number - 1).othersCoop
+        player.othersCoop_past = player.in_round(
+            player.round_number - 1).othersCoop
     else:
         player.othersCoop_past = None
 
@@ -72,14 +73,18 @@ def set_payoffs(group: Group):
 
 
 # PAGES
-# class Input_ID(Page):
-#     form_model: "player"
-#     form_fields: ["indID"]
+class Input_ID(Page):
+    form_model = "player"
+    form_fields = ["indID"]
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1
 
 
 class Contribute(Page):
     form_model = "player"
     form_fields = ["contribute"]
+
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         set_info(player)
@@ -94,13 +99,12 @@ class Results(Page):
     def vars_for_template(player: Player):
         group = player.group
         players = group.get_players()
-        contributions = [p.contribute for p in players]
         return dict(
-            contributions=contributions
+            players=players
         )
 
 
-page_sequence = [Contribute, ResultsWaitPage, Results]
+page_sequence = [Input_ID, Contribute, ResultsWaitPage, Results]
 
 
 def custom_export(players):

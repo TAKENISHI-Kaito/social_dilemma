@@ -1,21 +1,36 @@
 {{ block title }}
-    Result
+    （第{{ player.round_number }}ラウンド）行動結果
 {{ endblock }}
 
 {{ block content }}
 
-<p>第{{ player.round_number }}ラウンド</p>
+<link rel="stylesheet" href="{% static 'global/main.css' %}" />
 
-<p>
-    全員が行動を決定しました<br>
-    your group is {{ player.groupID }}<br>
-    your ID is {{ player.indID }}<br>
-    whether you contributed is {{ player.contribute }}<br>
-    thus your action is {{ player.action }}<br>
-    payoff is {{ player.payoff }}<br>
-</p>
+<table class="table table-hover">
+    <thead class="thead-light">
+      <tr class="table-dark">
+        <th>プレイヤー</th>
+        <th>行動</th>
+        <th>獲得したポイント</th>
+      </tr>
+    </thead>
+    <tbody class="table table-striped">
+      {{ for p in players }}
+      <tr class="table-light">
+        <td>
+          {{ if p == player }} プレイヤー {{ p.indID }}（あなた）
+          {{ else }} プレイヤー {{ p.indID }} {{ endif }}
+        </td>
+        <td>
+          {{ if p.action == 1 }} 提供した
+          {{ else }} 提供しなかった {{ endif }}
+        </td>
+        <td>{{ p.payoff }}</td>
+      </tr>
+      {{ endfor }}
+    </tbody>
+  </table>
 
-{{ contributions }}
 
     {{ next_button }}
 {{ endblock }}

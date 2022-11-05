@@ -1,11 +1,11 @@
 {{ block title }}
-    Contribute
+    （第{{ player.round_number }}ラウンド）行動選択
 {{ endblock }}
 {{ block content }}
 
-<p>
-    行動を選択してください
-</p>
+<link rel="stylesheet" href="{% static 'global/main.css' %}" />
+
+<p style="margin-top: auto;">行動を選択してください</p>
 
     {{ formfields }}
     {{ next_button }}
