@@ -5,15 +5,7 @@ doc = """
 Your app description
 """
 
-# "indID"：player.id_in_subsession
-# "round_number"
-# "groupID"：player.group_id
-# "action"：player.contribute
-# "othersCoop"：player.get_others_in_group()[n].action
-# "payoff"：player.payoff
-# "othersCoop_past"：
-
-
+# MODELS
 class C(BaseConstants):
     NAME_IN_URL = 'computatioal_models_of_social_learning'
     PLAYERS_PER_GROUP = 4
@@ -76,6 +68,7 @@ def set_payoffs(group: Group):
 class Input_ID(Page):
     form_model = "player"
     form_fields = ["indID"]
+
     @staticmethod
     def is_displayed(player):
         return player.round_number == 1
@@ -104,7 +97,13 @@ class Results(Page):
         )
 
 
-page_sequence = [Input_ID, Contribute, ResultsWaitPage, Results]
+class FinalPage(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == C.NUM_ROUNDS
+
+
+page_sequence = [Input_ID, Contribute, ResultsWaitPage, Results, FinalPage]
 
 
 def custom_export(players):
