@@ -36,13 +36,13 @@ class Player(BasePlayer):
 
 # FUNCTIONS
 def creating_session(subsession: Subsession):
-    subsession.group_randomly(fixed_id_in_group=True)
+    subsession.group_randomly()
     print(subsession.get_group_matrix())
 
 
 def set_info(player: Player):
     player.indID = player.id_in_subsession
-    player.groupID = player.group_id
+    player.groupID = player.group.id_in_subsession
     player.payoff = C.ENDOWMENT
     player.action = int(player.contribute)
     if player.round_number >= 2:
