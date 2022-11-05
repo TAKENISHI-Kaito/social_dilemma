@@ -18,8 +18,8 @@
       {{ for p in players }}
       <tr class="table-light">
         <td>
-          {{ if p == player }} プレイヤー {{ p.indID }}（あなた）
-          {{ else }} プレイヤー {{ p.indID }} {{ endif }}
+          {{ if p == player }} プレイヤー {{ p.id_in_group }}（あなた）
+          {{ else }} プレイヤー {{ p.id_in_group }} {{ endif }}
         </td>
         <td>
           {{ if p.action == 1 }} 提供した
