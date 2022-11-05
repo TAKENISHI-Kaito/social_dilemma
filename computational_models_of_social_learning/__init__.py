@@ -49,7 +49,7 @@ def set_info(player: Player):
         player.othersCoop_past = player.in_round(
             player.round_number - 1).othersCoop
     else:
-        player.othersCoop_past = None
+        player.othersCoop_past = 9999
 
 
 def set_payoffs(group: Group):
