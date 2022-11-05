@@ -65,15 +65,6 @@ def set_payoffs(group: Group):
 
 
 # PAGES
-class Input_ID(Page):
-    form_model = "player"
-    form_fields = ["indID"]
-
-    @staticmethod
-    def is_displayed(player):
-        return player.round_number == 1
-
-
 class Contribute(Page):
     form_model = "player"
     form_fields = ["contribute"]
@@ -103,7 +94,7 @@ class FinalPage(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
-page_sequence = [Input_ID, Contribute, ResultsWaitPage, Results, FinalPage]
+page_sequence = [Contribute, ResultsWaitPage, Results, FinalPage]
 
 
 def custom_export(players):
