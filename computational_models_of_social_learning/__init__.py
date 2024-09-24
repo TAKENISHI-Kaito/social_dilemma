@@ -9,7 +9,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'computatioal_models_of_social_learning'
     PLAYERS_PER_GROUP = 4
-    NUM_ROUNDS = 3
+    NUM_ROUNDS = 40
     ENDOWMENT = cu(10)
 
 
